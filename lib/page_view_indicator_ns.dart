@@ -43,11 +43,11 @@ class PageViewIndicator extends StatefulWidget {
 
 class _PageViewIndicatorState extends State<PageViewIndicator>
     with TickerProviderStateMixin {
-  late List<Indicator> _indicators;
-  late int _prevPage;
+  List<Indicator>? _indicators;
+  int? _prevPage;
 
   void _generateIndicators() {
-    _indicators.forEach((indicator) => indicator.dispose());
+    _indicators?.forEach((indicator) => indicator.dispose());
     _indicators = List.generate(
         widget.length,
         (index) => Indicator(
@@ -66,11 +66,11 @@ class _PageViewIndicatorState extends State<PageViewIndicator>
     final currPage = widget.pageIndexNotifier.value;
 
     if (currPage != _prevPage) {
-      _indicators[_prevPage].normalController.forward();
-      _indicators[_prevPage].highlightedController.reverse();
+      _indicators?[_prevPage!].normalController.forward();
+      _indicators?[_prevPage!].highlightedController.reverse();
 
-      _indicators[currPage].normalController.reverse();
-      _indicators[currPage].highlightedController.forward();
+      _indicators?[currPage].normalController.reverse();
+      _indicators?[currPage].highlightedController.forward();
 
       _prevPage = currPage;
     }
@@ -88,8 +88,8 @@ class _PageViewIndicatorState extends State<PageViewIndicator>
 
     _generateIndicators();
 
-    _indicators[widget.currentPage].normalController.reverse();
-    _indicators[widget.currentPage].highlightedController.forward();
+    _indicators?[widget.currentPage].normalController.reverse();
+    _indicators?[widget.currentPage].highlightedController.forward();
 
     _addIndicatorsListener();
   }
@@ -101,8 +101,8 @@ class _PageViewIndicatorState extends State<PageViewIndicator>
 
       _generateIndicators();
 
-      _indicators[currPage].normalController.reverse();
-      _indicators[currPage].highlightedController.forward();
+      _indicators?[currPage].normalController.reverse();
+      _indicators?[currPage].highlightedController.forward();
 
       _prevPage = currPage;
     }
@@ -114,7 +114,7 @@ class _PageViewIndicatorState extends State<PageViewIndicator>
 
   @override
   void dispose() {
-    _indicators.forEach((indicator) => indicator.dispose());
+    _indicators?.forEach((indicator) => indicator.dispose());
     widget.pageIndexNotifier.removeListener(_indicatorsListener);
     super.dispose();
   }
@@ -124,7 +124,7 @@ class _PageViewIndicatorState extends State<PageViewIndicator>
     return Row(
       mainAxisAlignment: widget.alignment,
       children: _indicators
-          .map<Widget>((indicator) => _buildIndicator(indicator))
+          !.map<Widget>((indicator) => _buildIndicator(indicator))
           .toList(),
     );
   }
